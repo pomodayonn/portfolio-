@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="ja" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>★~｡.:*･ﾟ Y2K HEISEI PORTFOLIO ﾟ･*:.｡~★</title>
+  
+  <!-- Favicon (SVG Data URI) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛸</text></svg>">
+
+  <!-- Google Fonts CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=M+PLUS+Rounded+1c:wght@400;700;900&family=Orbitron:wght@500;700;900&family=VT323&family=Silkscreen&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            dot: ['DotGothic16', 'monospace'],
+            orbitron: ['Orbitron', 'sans-serif'],
+            vt: ['VT323', 'monospace'],
+            pixel: ['Silkscreen', 'cursive'],
+            rounded: ['"M PLUS Rounded 1c"', 'sans-serif'],
+          },
+          colors: {
+            y2k: {
+              pink: '#ff1493',
+              hotpink: '#ff69b4',
+              neonblue: '#00f0ff',
+              deepblue: '#002060',
+              silver: '#e0e6ed',
+              chromebg: '#121324',
+              slime: '#39ff14',
+              purple: '#9d00ff',
+              metallic: '#8a9ba8',
+              winbg: '#008080'
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="theme-cyber select-none font-dot min-h-screen relative overflow-x-hidden text-slate-800 pb-16 sm:pb-0">
+
+  <!-- CRT Screen Overlay (Toggleable via button) -->
+  <div id="crtOverlay" class="crt-overlay pointer-events-none fixed inset-0 z-50 transition-opacity duration-300"></div>
+
+  <!-- Animated Cyber Grid Background -->
+  <div class="cyber-grid fixed inset-0 pointer-events-none z-[-2]"></div>
+  <div class="stars-container fixed inset-0 pointer-events-none z-[-1]" id="starsContainer"></div>
+
+  <!-- TOP BAR: 平成ガラケー風ステータスバー -->
+  <header class="w-full bg-black/90 text-y2k-neonblue border-b-2 border-y2k-neonblue/60 text-xs py-1.5 px-3 sticky top-0 z-40 backdrop-blur shadow-[0_4px_12px_rgba(0,240,255,0.25)] flex flex-wrap justify-between items-center gap-2">
+    <div class="flex items-center gap-2.5 font-pixel text-[11px] sm:text-xs">
+      <!-- ガラケーピクトグラム -->
+      <span class="flex items-center gap-1 text-y2k-slime" title="電波状態バリ3">
+        <i data-lucide="signal-high" class="w-3.5 h-3.5 inline"></i>
+        <span>3G [MAX]</span>
+      </span>
+      <span class="text-yellow-400 flex items-center gap-1">
+        <i data-lucide="battery-charging" class="w-3.5 h-3.5 inline"></i>
+        <span>100%</span>
+      </span>
+      <span class="hidden md:inline-block text-pink-400">♥ i-mode Connected ♥</span>
+    </div>
+
+    <!-- ニュースティッカー / MARQUEE -->
+    <div class="marquee-container flex-1 max-w-xs sm:max-w-md overflow-hidden bg-blue-950/70 border border-y2k-neonblue/40 px-2 py-0.5 rounded text-[11px] text-cyan-200">
+      <div class="marquee-content whitespace-nowrap">
+        🛸 WELCOME TO MY CYBER PORTFOLIO! ★ 平成レトロ＆Y2Kの世界へようこそ ★ 祝・訪問感謝！キリ番踏んだらBBSにカキコしてね ★ 相互リンク大歓迎♪ ★ 我輩の電脳基地へようこそであります！ ★
+      </div>
+    </div>
+
+    <!-- システムコントロールボタン (音量・CRT・テーマ) -->
+    <div class="flex items-center gap-1.5 sm:gap-2 text-xs">
+      <button id="soundToggleBtn" class="y2k-btn-mini" title="効果音 ON/OFF">
+        <i data-lucide="volume-2" class="w-3.5 h-3.5 inline"></i>
+        <span id="soundStatusText" class="hidden sm:inline">SE: ON</span>
+      </button>
+      <button id="crtToggleBtn" class="y2k-btn-mini" title="CRT走査線切り替え">
+        <i data-lucide="tv" class="w-3.5 h-3.5 inline"></i>
+        <span>CRT</span>
+      </button>
+      <button id="themeToggleBtn" class="y2k-btn-mini" title="サイバー / ギャルデコ テーマ切替">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5 inline"></i>
+        <span id="themeLabel" class="hidden sm:inline">THEME</span>
+      </button>
+      <span id="realtimeClock" class="font-pixel text-yellow-300 ml-1 text-[11px] sm:text-xs">00:00:00</span>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS (Desktop / Tablet) -->
+  <nav class="hidden sm:flex max-w-5xl mx-auto px-4 pt-4 flex-wrap gap-2 justify-center z-20 relative">
+    <a href="#home" class="y2k-tab-btn active" data-sound="click">
+      <i data-lucide="home" class="w-4 h-4 inline"></i> HOME
+    </a>
+    <a href="#profile" class="y2k-tab-btn" data-sound="click">
+      <i data-lucide="user" class="w-4 h-4 inline"></i> PROFILE (前略プロフ)
+    </a>
+    <a href="#parody" class="y2k-tab-btn" data-sound="sparkle">
+      <i data-lucide="gamepad-2" class="w-4 h-4 inline"></i> PLAY ROOM (FF・ケロロ・らきすた)
+    </a>
+    <a href="#skills" class="y2k-tab-btn" data-sound="click">
+      <i data-lucide="cpu" class="w-4 h-4 inline"></i> SKILLS
+    </a>
+    <a href="#works" class="y2k-tab-btn" data-sound="click">
+      <i data-lucide="folder-git-2" class="w-4 h-4 inline"></i> WORKS
+    </a>
+    <a href="#bbs" class="y2k-tab-btn" data-sound="click">
+      <i data-lucide="message-square" class="w-4 h-4 inline"></i> BBS (掲示板)
+    </a>
+    <a href="#links" class="y2k-tab-btn" data-sound="click">
+      <i data-lucide="link" class="w-4 h-4 inline"></i> LINKS
+    </a>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-8 sm:space-y-10 relative z-10">
+
+    <!-- HERO SECTION: HERO WINDOW & WINAMP PLAYER -->
+    <section id="home" class="scroll-mt-16 sm:scroll-mt-20">
+      <div class="y2k-window bg-slate-200 shadow-2xl rounded-t-lg overflow-hidden border-2 border-slate-300">
+        <!-- Title bar -->
+        <div class="window-titlebar bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-600 px-3 py-1.5 flex items-center justify-between text-white font-bold text-sm tracking-wider">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🌐</span>
+            <span class="font-pixel text-[11px] sm:text-sm drop-shadow truncate">CYBER_PORTFOLIO_v2.0.exe</span>
+          </div>
+          <div class="flex items-center gap-1.5 flex-shrink-0">
+            <button class="win-control-btn text-black font-bold">_</button>
+            <button class="win-control-btn text-black font-bold">□</button>
+            <button class="win-control-btn text-black font-bold bg-red-400 hover:bg-red-500">×</button>
+          </div>
+        </div>
+
+        <!-- Window Toolbar Menu (Hidden on smallest screens) -->
+        <div class="hidden sm:flex bg-slate-200 border-b border-slate-400 px-3 py-1 text-xs gap-4 text-slate-700 font-pixel">
+          <span class="hover:bg-blue-600 hover:text-white px-1.5 py-0.5 rounded cursor-pointer">File(F)</span>
+          <span class="hover:bg-blue-600 hover:text-white px-1.5 py-0.5 rounded cursor-pointer">Edit(E)</span>
+          <span class="hover:bg-blue-600 hover:text-white px-1.5 py-0.5 rounded cursor-pointer">View(V)</span>
+          <span class="hover:bg-blue-600 hover:text-white px-1.5 py-0.5 rounded cursor-pointer">Favorites(A)</span>
+          <span class="hover:bg-blue-600 hover:text-white px-1.5 py-0.5 rounded cursor-pointer">Help(H)</span>
+        </div>
+
+        <!-- Address Bar -->
+        <div class="bg-slate-100 border-b border-slate-300 px-3 py-1.5 flex items-center gap-2 text-xs">
+          <span class="text-slate-600 font-semibold text-[11px] sm:text-xs">Address:</span>
+          <div class="flex-1 bg-white border border-slate-400 px-2 py-0.5 rounded flex items-center gap-1 font-mono text-blue-700 text-[10px] sm:text-xs overflow-hidden text-ellipsis whitespace-nowrap">
+            <span>http://www.geocities.co.jp/SiliconValley/heisei_y2k_portfolio/</span>
+          </div>
+          <button class="px-2 py-0.5 bg-slate-300 border border-slate-500 rounded active:translate-y-0.5 text-xs font-bold" id="reloadBannerBtn">Go</button>
+        </div>
+
+        <!-- Hero Content Body -->
+        <div class="p-4 sm:p-8 bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white relative overflow-hidden">
+          
+          <!-- Cyber Rings -->
+          <div class="absolute -right-20 -bottom-20 w-60 sm:w-80 h-60 sm:h-80 rounded-full border-4 border-dashed border-cyan-500/20 animate-spin-slow pointer-events-none"></div>
+          <div class="absolute -left-10 -top-10 w-44 sm:w-60 h-44 sm:h-60 rounded-full border-4 border-dashed border-pink-500/20 animate-spin-slow pointer-events-none"></div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center relative z-10">
+            <!-- Left: Hero Intro -->
+            <div class="md:col-span-7 space-y-4 text-center md:text-left">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-pink-500/20 border border-pink-500/60 text-pink-300 text-xs font-bold tracking-widest uppercase animate-pulse">
+                <span>✦ Y2K DIGITAL CREATOR ✦</span>
+              </div>
+
+              <h1 class="text-2xl sm:text-5xl lg:text-6xl font-black font-orbitron tracking-tight leading-tight">
+                <span class="chrome-text block">AIKON / CREATOR</span>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-300 to-cyan-300 text-xl sm:text-3xl lg:text-4xl block mt-1">
+                  ~ 平成の風を感じる電脳世界 ~
+                </span>
+              </h1>
+
+              <p class="text-xs sm:text-sm text-cyan-100 font-dot leading-relaxed">
+                2000年代初頭のインターネットカルチャー・サイバーパンク・平成アニメ＆ゲームを愛するWebエンジニア＆デザイナー。著作権クリーンなオマージュと最新フロントエンド技術で制作しています★
+              </p>
+
+              <!-- Action Badges / Call to Action -->
+              <div class="flex flex-wrap gap-2.5 justify-center md:justify-start pt-1">
+                <a href="#works" class="y2k-btn-primary" data-sound="sparkle">
+                  <i data-lucide="sparkles" class="w-4 h-4 inline mr-1"></i> 作品を見る (WORKS)
+                </a>
+                <a href="#parody" class="y2k-btn-secondary" data-sound="beep">
+                  <i data-lucide="gamepad-2" class="w-4 h-4 inline mr-1"></i> プレイルーム (PARODY)
+                </a>
+                <a href="#bbs" class="y2k-btn-mini text-xs py-2 px-3 border-yellow-400 text-yellow-300" data-sound="click">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5 inline mr-1"></i> カキコする (BBS)
+                </a>
+              </div>
+
+              <!-- Retro Badge Stickers -->
+              <div class="pt-3 flex flex-wrap gap-2 items-center justify-center md:justify-start text-[10px]">
+                <span class="retro-badge bg-blue-600 text-white">📱 スマホ完全対応</span>
+                <span class="retro-badge bg-emerald-600 text-white">🛡️ 著作権SAFE</span>
+                <span class="retro-badge bg-yellow-400 text-black">FLASH READY</span>
+                <span class="retro-badge bg-pink-600 text-white">もってけ！神コード☆</span>
+              </div>
+            </div>
+
+            <!-- Right: Winamp Style Audio Player & CD-ROM Visual -->
+            <div class="md:col-span-5 flex flex-col items-center gap-4">
+              <!-- Spinning Hologram CD -->
+              <div class="relative group cursor-pointer" id="hologramCd" title="クリックでスクラッチ効果音！">
+                <div class="w-36 h-36 sm:w-48 sm:h-48 rounded-full cd-disk flex items-center justify-center shadow-2xl relative">
+                  <div class="cd-inner-hole w-12 h-12 rounded-full bg-slate-900 border-4 border-slate-600 flex items-center justify-center">
+                    <span class="text-[9px] text-cyan-300 font-pixel">Y2K</span>
+                  </div>
+                </div>
+                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 rounded-full">
+                  <span class="text-[11px] text-yellow-300 font-bold px-2 py-1 border border-yellow-300 rounded">Scratch! 💿</span>
+                </div>
+              </div>
+
+              <!-- WINAMP-INSPIRED MINI PLAYER (Web Audio Chiptune) -->
+              <div class="winamp-player w-full max-w-xs sm:max-w-sm bg-gradient-to-b from-gray-900 to-black border-2 border-emerald-500/80 rounded-md p-2.5 text-emerald-400 font-pixel shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                <div class="flex items-center justify-between text-[10px] pb-1 border-b border-emerald-900">
+                  <span class="flex items-center gap-1 font-orbitron">
+                    <i data-lucide="disc" class="w-3.5 h-3.5 animate-spin"></i> WINAMP v2.91
+                  </span>
+                  <span class="text-[9px] bg-emerald-950 px-1 border border-emerald-800 text-emerald-300" id="bitrateDisplay">128 kbps</span>
+                </div>
+
+                <!-- Green LED Song Title Display -->
+                <div class="bg-black border border-emerald-600/60 p-2 my-2 rounded flex flex-col gap-1">
+                  <div class="flex justify-between items-center text-xs">
+                    <span id="playerTrackName" class="text-emerald-300 font-vt tracking-wider truncate">01. Y2K_Cyber_Dream.mp3</span>
+                    <span id="playerTimer" class="font-vt text-yellow-400 text-sm flex-shrink-0">LOOP</span>
+                  </div>
+                  <!-- Visualizer Bars -->
+                  <div class="flex items-end gap-0.5 sm:gap-1 h-5 w-full pt-1" id="visualizerBars">
+                    <!-- generated by JS -->
+                  </div>
+                </div>
+
+                <!-- Player Controls -->
+                <div class="flex items-center justify-between gap-1 text-xs pt-1">
+                  <div class="flex gap-1">
+                    <button id="bgmPlayBtn" class="winamp-btn" title="再生 / 一時停止">
+                      <i data-lucide="play" class="w-3 h-3 inline"></i> PLAY
+                    </button>
+                    <button id="bgmStopBtn" class="winamp-btn" title="停止">
+                      <i data-lucide="square" class="w-3 h-3 inline"></i> STOP
+                    </button>
+                    <button id="bgmNextBtn" class="winamp-btn" title="次の曲">
+                      <i data-lucide="skip-forward" class="w-3 h-3 inline"></i> NEXT
+                    </button>
+                  </div>
+                  <span class="text-[9px] text-slate-400 font-dot">著作権フリー♫</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Bottom Status inside Hero Window -->
+          <div class="mt-6 pt-3 border-t border-slate-700/60 flex flex-wrap justify-between items-center text-[11px] text-slate-400 gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>STATUS: ONLINE & CODING NOW...</span>
+            </div>
+            <div>
+              <span class="text-yellow-400">※PCの方は [↑↑↓↓←→←→BA] で隠しコマンド発動★</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: PROFILE (前略プロフィール風) -->
+    <section id="profile" class="scroll-mt-16 sm:scroll-mt-20">
+      <div class="y2k-panel bg-white/95 backdrop-blur border-4 border-pink-400 rounded-xl p-4 sm:p-5 shadow-[5px_5px_0px_#ff1493]">
+        <div class="flex items-center gap-2 border-b-2 border-pink-300 pb-2.5 mb-4">
+          <span class="text-2xl">💖</span>
+          <h2 class="text-lg sm:text-2xl font-black text-pink-600 font-rounded tracking-wide">
+            前略プロフィール★彡 <span class="text-xs text-pink-400 font-normal">（リアルタイム更新中！）</span>
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+          <!-- Left: Profile Avatar Card (プリクラ/ガラケー待ち受け風) -->
+          <div class="md:col-span-4 flex flex-col items-center">
+            <div class="purikura-frame p-3 bg-gradient-to-br from-pink-300 via-purple-200 to-cyan-200 rounded-lg shadow-lg border-2 border-dashed border-pink-400 relative w-full max-w-xs">
+              <span class="absolute -top-3 -left-3 text-2xl rotate-[-15deg] select-none">🎀</span>
+              <span class="absolute -bottom-2 -right-2 text-2xl rotate-[12deg] select-none">✨</span>
+              <span class="absolute top-1/2 -right-3 text-xl select-none">🍭</span>
+              <span class="absolute top-2 right-2 bg-pink-500 text-white font-pixel text-[9px] px-1 rounded shadow">ズッ友★</span>
+
+              <div class="h-48 sm:h-56 bg-slate-900 rounded flex flex-col items-center justify-center text-center p-3 relative overflow-hidden group">
+                <div class="text-5xl sm:text-6xl mb-2 group-hover:scale-110 transition-transform">👾</div>
+                <div class="text-pink-300 font-orbitron font-bold text-lg">AIKON</div>
+                <div class="text-[11px] text-cyan-300 font-pixel">Fullstack & Creative</div>
+                <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none"></div>
+              </div>
+              <div class="text-center mt-2 font-pixel text-xs text-pink-700 font-bold">
+                ♡ 盛れてる待ち受け画像 ♡
+              </div>
+            </div>
+
+            <!-- ガラケー着メロ情報風 -->
+            <div class="w-full max-w-xs mt-3 bg-pink-50 border border-pink-300 rounded p-2.5 text-xs text-pink-900 space-y-1">
+              <div><strong>📱 着うた:</strong> もってけ！セーラー服 / Automatic</div>
+              <div><strong>🔋 バッテリー:</strong> 常にバリ3＆満タン★</div>
+              <div><strong>📍 生息地:</strong> 東京 / 電脳ポコペン星</div>
+            </div>
+          </div>
+
+          <!-- Right: 前略プロフ質問コーナー (Q&A List) -->
+          <div class="md:col-span-8 space-y-2 text-xs sm:text-sm text-slate-700">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div class="zenryaku-card">
+                <span class="zenryaku-q">ニックネームは？</span>
+                <span class="zenryaku-a">aikon★ (あいこん)</span>
+              </div>
+              <div class="zenryaku-card">
+                <span class="zenryaku-q">職業は？</span>
+                <span class="zenryaku-a">Webデベロッパー / クリエイター</span>
+              </div>
+              <div class="zenryaku-card">
+                <span class="zenryaku-q">好きなアニメ・ゲームは？</span>
+                <span class="zenryaku-a">ケロロ軍曹、FF、らき☆すた、ハルヒ</span>
+              </div>
+              <div class="zenryaku-card">
+                <span class="zenryaku-q">得意言語は？</span>
+                <span class="zenryaku-a">TypeScript, JavaScript, Python, CSS魔法</span>
+              </div>
+              <div class="zenryaku-card">
+                <span class="zenryaku-q">チョココロネの食べ方は？</span>
+                <span class="zenryaku-a">頭からちぎってクリームにつける派☆</span>
+              </div>
+              <div class="zenryaku-card">
+                <span class="zenryaku-q">座右の銘は？</span>
+                <span class="zenryaku-a">「我輩の辞書に不可能の文字はないであります！」</span>
+              </div>
+            </div>
+
+            <div class="mt-3 p-3 bg-gradient-to-r from-cyan-50 to-pink-50 rounded-lg border border-pink-200">
+              <div class="font-bold text-pink-700 mb-1 flex items-center gap-1 text-xs sm:text-sm">
+                <i data-lucide="message-circle-heart" class="w-4 h-4"></i> 自己PR / MESSAGE
+              </div>
+              <p class="text-xs sm:text-sm leading-relaxed text-slate-600 font-dot">
+                最新のフロントエンド技術（React, Vue, Tailwind, WebGL等）と、Y2K・平成カルチャーの遊び心を融合させたUI制作が得意です。ユーザーが触って思わず笑顔になるような体験を大切にしています！
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 2: PARODY PLAYROOM (ケロロ軍曹・FF・らき☆すた 遊び心エリア) -->
+    <section id="parody" class="scroll-mt-16 sm:scroll-mt-20 space-y-6">
+      
+      <!-- HEADER FOR PLAYROOM -->
+      <div class="text-center">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-400 text-black text-xs font-bold font-pixel shadow">
+          <span>🎮 RETRO PARODY & HOMAGE CORNER 🎮</span>
+        </div>
+        <h2 class="text-xl sm:text-3xl font-black font-orbitron text-cyan-300 mt-2">
+          平成名作オマージュ・プレイルーム
+        </h2>
+        <p class="text-xs text-slate-400 font-dot mt-1">
+          ※著作権に配慮した完全オリジナルパロディ＆ファンアートギミックです。クリックして遊んでみてね！
+        </p>
+      </div>
+
+      <!-- 1. FINAL FANTASY STYLE BATTLE & COMMAND WINDOW -->
+      <div class="ff-window p-4 sm:p-5 rounded-lg border-4 border-slate-200 shadow-2xl relative">
+        <div class="flex items-center justify-between border-b border-blue-400/50 pb-2 mb-3 text-white">
+          <div class="flex items-center gap-2 font-pixel text-xs sm:text-sm">
+            <span class="text-yellow-300">⚔️</span>
+            <span>FINAL_PORTFOLIO_BATTLE (ATB Active)</span>
+          </div>
+          <span class="text-xs text-cyan-300 font-mono">BGM: FANFARE_READY</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          <!-- Battle Dialogue / Log Screen -->
+          <div class="md:col-span-7 bg-black/60 p-3 sm:p-4 rounded border-2 border-blue-400/60 min-h-[90px] flex items-center">
+            <p id="ffDialogText" class="text-xs sm:text-sm text-white font-dot leading-relaxed">
+              野生の「開発タスク」があらわれた！ aikon のコマンドを選択してください。
+            </p>
+          </div>
+
+          <!-- Commands Selection Box (FF Classic Menu) -->
+          <div class="md:col-span-5 grid grid-cols-2 gap-2 text-xs sm:text-sm">
+            <button class="ff-cmd-btn" data-cmd="attack">
+              <span>▶</span> たたかう (CODE)
+            </button>
+            <button class="ff-cmd-btn" data-cmd="magic">
+              <span>▶</span> まほう (DESIGN)
+            </button>
+            <button class="ff-cmd-btn" data-cmd="item">
+              <span>▶</span> アイテム (CAFE)
+            </button>
+            <button class="ff-cmd-btn" data-cmd="escape">
+              <span>▶</span> にげる (TOP)
+            </button>
+          </div>
+        </div>
+
+        <!-- Party Status Bar (Classic FF Window Lower Portion) -->
+        <div class="mt-4 pt-3 border-t border-blue-400/50 flex flex-wrap justify-between items-center text-xs text-white gap-2 font-pixel">
+          <div class="flex items-center gap-3">
+            <span class="text-yellow-300 font-bold">NAME: aikon</span>
+            <span class="text-cyan-300">JOB: 魔導エンジニア</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-emerald-400">HP: 9999/9999</span>
+            <span class="text-purple-300">MP: 999/999</span>
+            <span class="bg-yellow-400 text-black px-1.5 py-0.5 rounded text-[10px] font-bold">ATB MAX!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. KERORO & LUCKY STAR HOMAGE DUAL CARDS -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- A. ケロロ軍曹オマージュ: 地球侵略本部ステータス -->
+        <div class="y2k-window bg-slate-900 border-2 border-lime-400 rounded-lg p-4 sm:p-5 text-white">
+          <div class="flex items-center justify-between border-b border-lime-500/40 pb-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">🐸</span>
+              <div>
+                <h3 class="text-base font-bold font-rounded text-lime-400">
+                  我輩のポコペン（地球）電脳侵略本部！
+                </h3>
+                <span class="text-[10px] text-slate-400 font-pixel">KERORO HOMAGE / MISSION CONTROL</span>
+              </div>
+            </div>
+            <span class="bg-lime-500 text-black text-[10px] font-pixel px-2 py-0.5 rounded font-bold">侵略中</span>
+          </div>
+
+          <div class="space-y-3 text-xs font-dot">
+            <p class="text-slate-300 leading-relaxed">
+              「地球（ポコペン）のWebを面白くするための侵略作戦を展開中であります！本日のガンプラ制作スケジュールも順調であります！」
+            </p>
+
+            <!-- Mission Progress Bars -->
+            <div class="space-y-2">
+              <div>
+                <div class="flex justify-between text-[11px] mb-1">
+                  <span>Webフロントエンド侵略度</span>
+                  <span class="text-lime-400 font-pixel">92%</span>
+                </div>
+                <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 92%; background: linear-gradient(90deg, #10b981, #34d399, #86efac);"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between text-[11px] mb-1">
+                  <span>ガンプラ・フィギュア完成度</span>
+                  <span class="text-yellow-400 font-pixel">99%</span>
+                </div>
+                <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 99%; background: linear-gradient(90deg, #f59e0b, #fbbf24, #fef08a);"></div></div>
+              </div>
+            </div>
+
+            <!-- Squadron Homage Avatars -->
+            <div class="pt-2 flex justify-around text-center text-xl bg-black/40 p-2 rounded border border-lime-500/30">
+              <div title="軍曹隊長 (Frontend)">🐸<div class="text-[9px] text-lime-300">隊長</div></div>
+              <div title="タママ風 (UI/UX)">🐾<div class="text-[9px] text-blue-300">二等兵</div></div>
+              <div title="ギロロ風 (Security)">💥<div class="text-[9px] text-red-300">伍長</div></div>
+              <div title="クルル風 (Hacker)">🎧<div class="text-[9px] text-yellow-300">曹長</div></div>
+              <div title="ドロロ風 (Performance)">🍃<div class="text-[9px] text-cyan-300">兵長</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- B. らき☆すた オマージュ: チョココロネ論争ウィジェット -->
+        <div class="y2k-window bg-pink-50 border-2 border-pink-400 rounded-lg p-4 sm:p-5 text-slate-800">
+          <div class="flex items-center justify-between border-b border-pink-300 pb-2 mb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-2xl">🥐</span>
+              <div>
+                <h3 class="text-base font-bold font-rounded text-pink-600">
+                  第1回 チョココロネ論争★投票所
+                </h3>
+                <span class="text-[10px] text-pink-400 font-pixel">LUCKY STAR HOMAGE / CHOCO CORNET POLL</span>
+              </div>
+            </div>
+            <span class="text-xs text-yellow-500">★☆★</span>
+          </div>
+
+          <div class="space-y-3 text-xs font-dot">
+            <p class="text-slate-600 leading-relaxed">
+              「チョココロネの頭ってどっち？太い方から食べる？それとも細い方からちぎってクリームにつける？」クリックして投票してね！
+            </p>
+
+            <div class="grid grid-cols-2 gap-3 pt-1">
+              <button id="chocoBtnHead" class="choco-vote-btn" data-sound="sparkle">
+                <span class="text-2xl block mb-1">🥐👈</span>
+                <span class="font-bold block text-pink-700">太い頭から派</span>
+                <span class="text-[11px] text-slate-500" id="chocoCountHead">42票</span>
+              </button>
+              <button id="chocoBtnTail" class="choco-vote-btn" data-sound="sparkle">
+                <span class="text-2xl block mb-1">👉🥐</span>
+                <span class="font-bold block text-purple-700">細い尻尾から派</span>
+                <span class="text-[11px] text-slate-500" id="chocoCountTail">38票</span>
+              </button>
+            </div>
+
+            <!-- Dialogue Result Output -->
+            <div class="p-2.5 bg-white rounded border border-pink-200 text-pink-700 text-center text-xs font-bold min-h-[38px] flex items-center justify-center" id="chocoResultMsg">
+              ★ こなた「もってけ！セーラー服を聴きながら食べると美味しいよ☆」
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SECTION 3: SKILLS & ABILITIES -->
+    <section id="skills" class="scroll-mt-16 sm:scroll-mt-20">
+      <div class="y2k-window bg-slate-900 border-2 border-cyan-400 rounded-lg overflow-hidden shadow-[0_0_20px_rgba(0,240,255,0.3)]">
+        <!-- Title bar -->
+        <div class="bg-gradient-to-r from-cyan-600 via-blue-700 to-purple-800 px-3 py-1.5 flex items-center justify-between text-white font-bold text-sm">
+          <div class="flex items-center gap-2">
+            <i data-lucide="terminal" class="w-4 h-4"></i>
+            <span class="font-pixel text-[11px] sm:text-xs tracking-wider">C:\SKILLS\CAPABILITY_ANALYSIS.BAT</span>
+          </div>
+          <div class="text-[10px] sm:text-xs text-yellow-300 font-pixel">[STATUS: LEVEL UP]</div>
+        </div>
+
+        <div class="p-4 sm:p-6 text-cyan-300 space-y-5">
+          <div class="text-center sm:text-left">
+            <h2 class="text-xl sm:text-2xl font-black font-orbitron text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-200 to-pink-300">
+              ⚡ SKILLS & EXPERTISE
+            </h2>
+            <p class="text-xs text-slate-400 font-dot mt-1">
+              平成の情熱 × 令和のモダンテックスタック！
+            </p>
+          </div>
+
+          <!-- Skill Categories Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            
+            <!-- Category 1: Frontend -->
+            <div class="skill-category-card">
+              <div class="flex items-center gap-2 text-pink-400 font-bold border-b border-pink-500/40 pb-2 mb-3">
+                <i data-lucide="layout" class="w-4 h-4"></i>
+                <span class="font-orbitron">FRONTEND</span>
+              </div>
+              <ul class="space-y-3">
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>HTML5 / CSS3 / Tailwind</span>
+                    <span class="font-pixel text-yellow-300">95%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 95%;"></div></div>
+                </li>
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>JavaScript (ES6+) / TS</span>
+                    <span class="font-pixel text-yellow-300">90%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 90%;"></div></div>
+                </li>
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>React / Next.js / Vue</span>
+                    <span class="font-pixel text-yellow-300">85%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 85%;"></div></div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Category 2: Backend & Cloud -->
+            <div class="skill-category-card">
+              <div class="flex items-center gap-2 text-cyan-400 font-bold border-b border-cyan-500/40 pb-2 mb-3">
+                <i data-lucide="server" class="w-4 h-4"></i>
+                <span class="font-orbitron">BACKEND & API</span>
+              </div>
+              <ul class="space-y-3">
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>Node.js / Express</span>
+                    <span class="font-pixel text-yellow-300">80%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 80%;"></div></div>
+                </li>
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>Python / Fast API</span>
+                    <span class="font-pixel text-yellow-300">75%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 75%;"></div></div>
+                </li>
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>SQL / Supabase / Firebase</span>
+                    <span class="font-pixel text-yellow-300">80%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 80%;"></div></div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Category 3: Design & Creative -->
+            <div class="skill-category-card sm:col-span-2 md:col-span-1">
+              <div class="flex items-center gap-2 text-purple-400 font-bold border-b border-purple-500/40 pb-2 mb-3">
+                <i data-lucide="palette" class="w-4 h-4"></i>
+                <span class="font-orbitron">CREATIVE & TOOLS</span>
+              </div>
+              <ul class="space-y-3">
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>Figma / UI/UX Design</span>
+                    <span class="font-pixel text-yellow-300">88%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 88%;"></div></div>
+                </li>
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>Pixel Art & 2D Graphic</span>
+                    <span class="font-pixel text-yellow-300">85%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 85%;"></div></div>
+                </li>
+                <li>
+                  <div class="flex justify-between text-xs mb-1">
+                    <span>Git / GitHub / CI/CD</span>
+                    <span class="font-pixel text-yellow-300">85%</span>
+                  </div>
+                  <div class="xp-progress-bar"><div class="xp-progress-fill" style="width: 85%;"></div></div>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+
+          <!-- Feature Tags -->
+          <div class="bg-black/60 p-3 sm:p-4 rounded border border-cyan-500/30">
+            <span class="text-xs text-yellow-300 font-pixel block mb-2">★ FAVORITE TOOLS & RETRO GEAR ★</span>
+            <div class="flex flex-wrap gap-2 text-xs">
+              <span class="y2k-tag">🎮 GameBoy Color</span>
+              <span class="y2k-tag">📟 Pager / ポケベル</span>
+              <span class="y2k-tag">💿 MiniDisc (MD)</span>
+              <span class="y2k-tag">⚡ iMac G3</span>
+              <span class="y2k-tag">🛸 Cyber Aesthetics</span>
+              <span class="y2k-tag">👾 Chiptune 8-bit</span>
+              <span class="y2k-tag">✨ Tamagotchi</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: WORKS / PORTFOLIO SHOWCASE -->
+    <section id="works" class="scroll-mt-16 sm:scroll-mt-20">
+      <div class="y2k-window bg-slate-100 border-2 border-pink-500 rounded-lg overflow-hidden shadow-xl">
+        <!-- Title bar -->
+        <div class="bg-gradient-to-r from-pink-600 via-rose-500 to-purple-600 px-3 py-1.5 flex items-center justify-between text-white font-bold text-sm">
+          <div class="flex items-center gap-2">
+            <i data-lucide="folder" class="w-4 h-4"></i>
+            <span class="font-pixel text-[11px] sm:text-xs tracking-wider">PROJECT_GALLERY.DIR</span>
+          </div>
+          <div class="flex gap-2 text-xs">
+            <span class="bg-white/20 px-2 py-0.5 rounded font-pixel">WORKS</span>
+          </div>
+        </div>
+
+        <div class="p-4 sm:p-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-slate-800 font-orbitron flex items-center gap-2">
+                📂 CREATIVE WORKS <span class="text-pink-500 text-lg">★</span>
+              </h2>
+              <p class="text-xs text-slate-600 font-dot">
+                著作権クリーンなWebアプリ・デザイン・ゲーム作品集です。
+              </p>
+            </div>
+
+            <!-- Category Filter Buttons -->
+            <div class="flex flex-wrap gap-1 bg-slate-200 p-1 rounded-md border border-slate-300 text-xs font-pixel" id="worksFilterGroup">
+              <button class="filter-btn active" data-filter="all">ALL</button>
+              <button class="filter-btn" data-filter="web">WEB APP</button>
+              <button class="filter-btn" data-filter="design">DESIGN</button>
+              <button class="filter-btn" data-filter="game">GAME</button>
+            </div>
+          </div>
+
+          <!-- Works Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6" id="worksGrid">
+            
+            <!-- Work Item 1 -->
+            <article class="work-card group" data-category="web">
+              <div class="work-thumb-wrapper bg-gradient-to-tr from-cyan-900 to-indigo-900 h-40 sm:h-44 rounded-t relative overflow-hidden flex items-center justify-center p-4">
+                <div class="text-center group-hover:scale-105 transition-transform">
+                  <div class="text-4xl sm:text-5xl mb-2">📟</div>
+                  <div class="text-cyan-300 font-orbitron font-bold">PAGER CHAT 2000</div>
+                  <div class="text-[10px] text-pink-300 font-pixel">084 (オハヨウ) / 4649 (ヨロシク)</div>
+                </div>
+                <span class="absolute top-2 right-2 bg-pink-600 text-white text-[10px] px-2 py-0.5 rounded font-pixel shadow">WEB APP</span>
+              </div>
+              <div class="p-4 bg-white border border-t-0 border-slate-300 rounded-b">
+                <h3 class="font-bold text-slate-800 text-base flex items-center justify-between">
+                  <span>ポケベル暗号ジェネレーター</span>
+                  <span class="text-xs text-blue-600 font-pixel">2024</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-1.5 leading-relaxed font-dot">
+                  数字の語呂合わせでメッセージを変換・解読できる平成ポケベルシミュレーター。Web Audioによる着信音再生機能付き。
+                </p>
+                <div class="mt-3 flex flex-wrap gap-1.5 text-[11px]">
+                  <span class="tech-pill">TypeScript</span>
+                  <span class="tech-pill">Tailwind CSS</span>
+                  <span class="tech-pill">Web Audio</span>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-200 flex justify-between items-center text-xs">
+                  <button class="y2k-link-btn" onclick="openWorkModal('pager')" data-sound="click">
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 inline"></i> 詳細を見る
+                  </button>
+                  <span class="text-[10px] text-emerald-600 font-bold">● Released</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Work Item 2 -->
+            <article class="work-card group" data-category="design">
+              <div class="work-thumb-wrapper bg-gradient-to-tr from-pink-900 to-purple-900 h-40 sm:h-44 rounded-t relative overflow-hidden flex items-center justify-center p-4">
+                <div class="text-center group-hover:scale-105 transition-transform">
+                  <div class="text-4xl sm:text-5xl mb-2">💿</div>
+                  <div class="text-pink-300 font-orbitron font-bold">CYBER DISK UI KIT</div>
+                  <div class="text-[10px] text-yellow-300 font-pixel">Holographic / Chrome / Glossy</div>
+                </div>
+                <span class="absolute top-2 right-2 bg-purple-600 text-white text-[10px] px-2 py-0.5 rounded font-pixel shadow">DESIGN</span>
+              </div>
+              <div class="p-4 bg-white border border-t-0 border-slate-300 rounded-b">
+                <h3 class="font-bold text-slate-800 text-base flex items-center justify-between">
+                  <span>Y2K ホログラムUIデザインキット</span>
+                  <span class="text-xs text-blue-600 font-pixel">2024</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-1.5 leading-relaxed font-dot">
+                  2000年代のCDパッケージ、光沢ボタン、メタリックテクスチャを再現したFigmaコンポーネント集。
+                </p>
+                <div class="mt-3 flex flex-wrap gap-1.5 text-[11px]">
+                  <span class="tech-pill">Figma</span>
+                  <span class="tech-pill">UI Design</span>
+                  <span class="tech-pill">3D Shaders</span>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-200 flex justify-between items-center text-xs">
+                  <button class="y2k-link-btn" onclick="openWorkModal('uikit')" data-sound="click">
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 inline"></i> 詳細を見る
+                  </button>
+                  <span class="text-[10px] text-emerald-600 font-bold">● Published</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Work Item 3 -->
+            <article class="work-card group" data-category="game">
+              <div class="work-thumb-wrapper bg-gradient-to-tr from-emerald-950 to-slate-900 h-40 sm:h-44 rounded-t relative overflow-hidden flex items-center justify-center p-4">
+                <div class="text-center group-hover:scale-105 transition-transform">
+                  <div class="text-4xl sm:text-5xl mb-2">👾</div>
+                  <div class="text-emerald-300 font-orbitron font-bold">NEO PIXEL DUNGEON</div>
+                  <div class="text-[10px] text-emerald-400 font-pixel">8-Bit Rogue-lite RPG</div>
+                </div>
+                <span class="absolute top-2 right-2 bg-emerald-600 text-white text-[10px] px-2 py-0.5 rounded font-pixel shadow">GAME</span>
+              </div>
+              <div class="p-4 bg-white border border-t-0 border-slate-300 rounded-b">
+                <h3 class="font-bold text-slate-800 text-base flex items-center justify-between">
+                  <span>ネオ・ピクセルダンジョン</span>
+                  <span class="text-xs text-blue-600 font-pixel">2023</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-1.5 leading-relaxed font-dot">
+                  ブラウザで遊べるレトロドット絵ローグライク。ゲームボーイカラー調のパレットとチップチューンサウンドが特徴。
+                </p>
+                <div class="mt-3 flex flex-wrap gap-1.5 text-[11px]">
+                  <span class="tech-pill">HTML5 Canvas</span>
+                  <span class="tech-pill">JavaScript</span>
+                  <span class="tech-pill">Pixel Art</span>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-200 flex justify-between items-center text-xs">
+                  <button class="y2k-link-btn" onclick="openWorkModal('game')" data-sound="click">
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 inline"></i> 詳細を見る
+                  </button>
+                  <span class="text-[10px] text-emerald-600 font-bold">● Playable</span>
+                </div>
+              </div>
+            </article>
+
+            <!-- Work Item 4 -->
+            <article class="work-card group" data-category="web">
+              <div class="work-thumb-wrapper bg-gradient-to-tr from-amber-900 to-slate-900 h-40 sm:h-44 rounded-t relative overflow-hidden flex items-center justify-center p-4">
+                <div class="text-center group-hover:scale-105 transition-transform">
+                  <div class="text-4xl sm:text-5xl mb-2">📻</div>
+                  <div class="text-amber-300 font-orbitron font-bold">LO-FI SYNTH CHOPPER</div>
+                  <div class="text-[10px] text-orange-300 font-pixel">Web Audio Synthesizer</div>
+                </div>
+                <span class="absolute top-2 right-2 bg-amber-600 text-white text-[10px] px-2 py-0.5 rounded font-pixel shadow">WEB APP</span>
+              </div>
+              <div class="p-4 bg-white border border-t-0 border-slate-300 rounded-b">
+                <h3 class="font-bold text-slate-800 text-base flex items-center justify-between">
+                  <span>ウェブ・ローファイシンセ</span>
+                  <span class="text-xs text-blue-600 font-pixel">2023</span>
+                </h3>
+                <p class="text-xs text-slate-600 mt-1.5 leading-relaxed font-dot">
+                  Web Audio APIを用いたブラウザ型シンセサイザー。音源のリアルタイム合成やエフェクト調整が可能。
+                </p>
+                <div class="mt-3 flex flex-wrap gap-1.5 text-[11px]">
+                  <span class="tech-pill">Web Audio API</span>
+                  <span class="tech-pill">React</span>
+                  <span class="tech-pill">SVG UI</span>
+                </div>
+                <div class="mt-4 pt-2 border-t border-slate-200 flex justify-between items-center text-xs">
+                  <button class="y2k-link-btn" onclick="openWorkModal('synth')" data-sound="click">
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 inline"></i> 詳細を見る
+                  </button>
+                  <span class="text-[10px] text-emerald-600 font-bold">● Live Demo</span>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: BBS (平成掲示板風コンタクト & ゲストブック) -->
+    <section id="bbs" class="scroll-mt-16 sm:scroll-mt-20">
+      <div class="y2k-panel bg-gradient-to-b from-blue-50 to-slate-100 border-4 border-cyan-400 rounded-xl p-4 sm:p-5 shadow-[5px_5px_0px_#00f0ff]">
+        
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b-2 border-cyan-300 pb-2.5 mb-4 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📝</span>
+            <div>
+              <h2 class="text-lg sm:text-2xl font-black text-cyan-800 font-rounded tracking-wide">
+                CYBER BBS (掲示板) ★ カキコしてね！
+              </h2>
+              <p class="text-xs text-slate-500 font-dot">誹謗中傷や荒らしは管理人により即アク禁となります★</p>
+            </div>
+          </div>
+          <span class="bg-yellow-300 text-black text-xs font-pixel px-2 py-1 border border-black shadow">
+            キリ番踏み逃げ禁止！
+          </span>
+        </div>
+
+        <!-- Form for Writing to BBS -->
+        <form id="bbsForm" class="bg-white p-3 sm:p-4 rounded-lg border-2 border-dashed border-cyan-300 space-y-3 mb-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">お名前 (HN):</label>
+              <input type="text" id="bbsNameInput" required placeholder="名無しさん★" maxlength="20" class="y2k-input w-full">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">メール / SNS (省略可):</label>
+              <input type="text" id="bbsContactInput" placeholder="sage / @twitter / email" maxlength="40" class="y2k-input w-full">
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1 text-xs">メッセージ本文:</label>
+            <textarea id="bbsMessageInput" required rows="3" placeholder="はじめまして！サイト開設おめでとうございます！キリ番ゲットしました★" class="y2k-input w-full text-xs"></textarea>
+          </div>
+
+          <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
+            <div class="flex flex-wrap gap-2 text-xs">
+              <span class="text-pink-600 font-bold cursor-pointer" onclick="insertEmoji('（*＾-＾*）')">（*＾-＾*）</span>
+              <span class="text-pink-600 font-bold cursor-pointer" onclick="insertEmoji('ｷﾀ━━━(ﾟ∀ﾟ)━━━!!')">ｷﾀ━(ﾟ∀ﾟ)━!!</span>
+              <span class="text-pink-600 font-bold cursor-pointer" onclick="insertEmoji('(((o(*ﾟ▽ﾟ*)o)))')">(*ﾟ▽ﾟ*)</span>
+              <span class="text-pink-600 font-bold cursor-pointer" onclick="insertEmoji('★☆★')">★☆★</span>
+            </div>
+            <button type="submit" class="y2k-btn-primary py-1.5 px-4 text-xs font-bold" data-sound="sparkle">
+              送信する (カキコ) 🚀
+            </button>
+          </div>
+        </form>
+
+        <!-- BBS Thread Messages List -->
+        <div class="space-y-3" id="bbsList">
+          <!-- Dynamically loaded / LocalStorage stored items -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 6: LINKS & BANNER ALLIANCE -->
+    <section id="links" class="scroll-mt-16 sm:scroll-mt-20">
+      <div class="y2k-window bg-slate-900 border-2 border-yellow-400 rounded-lg p-4 sm:p-5 text-white">
+        
+        <div class="flex flex-wrap items-center justify-between border-b border-yellow-400/40 pb-2.5 mb-4 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🔗</span>
+            <h2 class="text-lg sm:text-xl font-black font-orbitron text-yellow-300">
+              LINKS & BANNER ALLIANCE (同盟・リンク集)
+            </h2>
+          </div>
+          <button id="copyBannerBtn" class="y2k-btn-mini text-yellow-300 border-yellow-400" data-sound="click">
+            <i data-lucide="copy" class="w-3 h-3 inline"></i> バナーコード取得
+          </button>
+        </div>
+
+        <p class="text-xs text-slate-300 font-dot mb-4 leading-relaxed">
+          当サイトはリンクフリーです！バナーは直リンク・お持ち帰りどちらでもOKです★<br>
+          相互リンクご希望の方はBBSかメールでお知らせください！
+        </p>
+
+        <!-- Banner Preview Card -->
+        <div class="bg-black/80 border border-slate-700 p-3 sm:p-4 rounded-lg flex flex-col sm:flex-row items-center gap-4 mb-5">
+          <div class="heisei-banner-8831 flex-shrink-0 cursor-pointer shadow-lg hover:scale-105 transition-transform" onclick="triggerConfetti()">
+            <div class="h-full flex items-center justify-between px-2 bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 text-white font-pixel text-[9px] border border-white">
+              <span>★ AIKON ★</span>
+              <span class="text-yellow-300 text-[8px]">Y2K DEV</span>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400 space-y-1 text-center sm:text-left">
+            <div><strong>サイト名:</strong> AIKON's Y2K Cyber World</div>
+            <div><strong>管理人:</strong> aikon</div>
+            <div><strong>URL:</strong> https://aikon-portfolio.local/</div>
+          </div>
+        </div>
+
+        <!-- 88x31 バナー大集合 -->
+        <div>
+          <span class="text-xs font-pixel text-yellow-400 block mb-2">★ SUPPORTED TECHNOLOGIES & BADGES ★</span>
+          <div class="flex flex-wrap gap-2 items-center justify-center sm:justify-start">
+            <div class="retro-badge-8831 bg-blue-900 border-blue-400">
+              <span class="text-[8px] text-cyan-300 font-pixel">HTML 5.0</span>
+              <span class="text-[7px] text-white">VALIDATED</span>
+            </div>
+            <div class="retro-badge-8831 bg-yellow-900 border-yellow-400">
+              <span class="text-[8px] text-yellow-300 font-pixel">JS POWERED</span>
+              <span class="text-[7px] text-white">INTERACTIVE</span>
+            </div>
+            <div class="retro-badge-8831 bg-cyan-900 border-cyan-400">
+              <span class="text-[8px] text-cyan-300 font-pixel">TAILWIND</span>
+              <span class="text-[7px] text-white">CDN READY</span>
+            </div>
+            <div class="retro-badge-8831 bg-pink-900 border-pink-400">
+              <span class="text-[8px] text-pink-300 font-pixel">HEISEI 90s</span>
+              <span class="text-[7px] text-white">RETRO VIBES</span>
+            </div>
+            <div class="retro-badge-8831 bg-green-900 border-green-400">
+              <span class="text-[8px] text-green-300 font-pixel">RESPONSIVE</span>
+              <span class="text-[7px] text-white">MOBILE READY</span>
+            </div>
+            <div class="retro-badge-8831 bg-purple-900 border-purple-400">
+              <span class="text-[8px] text-purple-300 font-pixel">COPYRIGHT</span>
+              <span class="text-[7px] text-white">100% SAFE</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER: アクセスカウンター & キリ番 -->
+    <footer class="pt-6 pb-6 text-center space-y-4">
+      
+      <!-- アクセスカウンター -->
+      <div class="inline-block bg-black p-3 rounded-lg border-2 border-pink-500 shadow-[0_0_15px_rgba(255,20,147,0.4)]">
+        <div class="text-[11px] text-pink-300 font-pixel mb-1">
+          ★ YOU ARE VISITOR NO. ★
+        </div>
+        <div class="flex items-center justify-center gap-1 font-mono text-2xl sm:text-3xl font-black" id="counterBox">
+          <span class="counter-digit">0</span>
+          <span class="counter-digit">0</span>
+          <span class="counter-digit">4</span>
+          <span class="counter-digit">2</span>
+          <span class="counter-digit">7</span>
+          <span class="counter-digit">8</span>
+        </div>
+        <div class="text-[10px] text-cyan-400 font-dot mt-1 flex items-center justify-center gap-1">
+          <span>（祝・500000人達成目前！）</span>
+          <button id="countUpBtn" class="text-yellow-300 underline hover:text-white" title="カウントを回す">回す</button>
+        </div>
+      </div>
+
+      <!-- Copyright & Legal Disclaimer (著作権対応の明記) -->
+      <div class="text-[11px] text-slate-400 font-dot space-y-1.5 max-w-2xl mx-auto px-2">
+        <p>
+          ※当サイト内のオマージュ・パロディ要素はファン精神に基づく表現であり、各社公式とは一切関係ありません。
+          外部の商標画像や公式アセットは使用しておらず、ネット公開・ポートフォリオ利用が可能です。
+        </p>
+        <p class="font-pixel text-[11px] text-cyan-400">
+          (C) 2000-2026 AIKON CYBER HEISEI PORTFOLIO. ALL RIGHTS RESERVED.
+        </p>
+      </div>
+
+      <div>
+        <a href="#home" class="inline-flex items-center gap-1 text-xs text-pink-400 hover:text-pink-300 font-pixel underline" data-sound="click">
+          <i data-lucide="arrow-up-circle" class="w-4 h-4"></i> TOPに戻る (PAGE TOP)
+        </a>
+      </div>
+
+    </footer>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION (平成ガラケー風ソフトキーバー) -->
+  <aside class="sm:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur border-t-2 border-cyan-400 px-2 py-1.5 z-40 flex justify-around items-center text-[10px] font-pixel text-slate-200 shadow-2xl">
+    <a href="#home" class="flex flex-col items-center gap-0.5 text-cyan-300 hover:text-white" data-sound="click">
+      <i data-lucide="home" class="w-4 h-4"></i>
+      <span>TOP</span>
+    </a>
+    <a href="#profile" class="flex flex-col items-center gap-0.5 text-pink-400 hover:text-white" data-sound="click">
+      <i data-lucide="user" class="w-4 h-4"></i>
+      <span>プロフ</span>
+    </a>
+    <a href="#parody" class="flex flex-col items-center gap-0.5 text-yellow-300 hover:text-white" data-sound="sparkle">
+      <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+      <span>遊び場</span>
+    </a>
+    <a href="#works" class="flex flex-col items-center gap-0.5 text-emerald-400 hover:text-white" data-sound="click">
+      <i data-lucide="folder" class="w-4 h-4"></i>
+      <span>作品</span>
+    </a>
+    <a href="#bbs" class="flex flex-col items-center gap-0.5 text-blue-300 hover:text-white" data-sound="click">
+      <i data-lucide="message-square" class="w-4 h-4"></i>
+      <span>BBS</span>
+    </a>
+  </aside>
+
+  <!-- MODAL: WORK DETAIL MODAL (Windows Dialog Style) -->
+  <div id="workModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="y2k-window bg-slate-200 border-2 border-slate-400 w-full max-w-lg shadow-2xl rounded-t overflow-hidden">
+      <div class="bg-blue-900 text-white px-3 py-1.5 flex justify-between items-center font-bold text-sm">
+        <span id="modalTitle" class="font-pixel text-xs">WORK_DETAILS.EXE</span>
+        <button onclick="closeWorkModal()" class="win-control-btn text-black font-bold bg-red-400 hover:bg-red-500">×</button>
+      </div>
+      <div class="p-4 sm:p-5 text-slate-800 space-y-3 font-dot">
+        <div id="modalIcon" class="text-4xl text-center">📟</div>
+        <h3 id="modalHeading" class="text-lg font-bold text-blue-900 text-center font-rounded">作品タイトル</h3>
+        <p id="modalDesc" class="text-xs leading-relaxed text-slate-700 bg-white p-3 rounded border border-slate-300">
+          詳細な説明がここに表示されます。
+        </p>
+        <div class="text-xs space-y-1 bg-slate-100 p-2.5 rounded border border-slate-300">
+          <div><strong>使用技術:</strong> <span id="modalTech" class="font-mono text-blue-700">React, TypeScript</span></div>
+          <div><strong>制作期間:</strong> <span id="modalPeriod">2週間</span></div>
+          <div><strong>公開状況:</strong> <span id="modalStatus" class="text-emerald-700 font-bold">一般公開中</span></div>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button onclick="triggerConfetti()" class="y2k-btn-secondary text-xs px-3 py-1">いいね！(☆∀☆)</button>
+          <button onclick="closeWorkModal()" class="y2k-btn-primary text-xs px-3 py-1">閉じる (OK)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

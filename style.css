@@ -1,0 +1,684 @@
+/* ==========================================================================
+   Y2K HEISEI PORTFOLIO STYLESHEET
+   Aesthetics: Cyber Y2K, Windows 98/2000/XP, Heisei Gal Pop & Web 1.0 Retro
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root Variables & Color Palettes
+   -------------------------------------------------------------------------- */
+:root {
+  --bg-primary: #0a0b18;
+  --text-main: #e2e8f0;
+  --accent-cyan: #00f0ff;
+  --accent-pink: #ff1493;
+  --accent-lime: #39ff14;
+  --accent-yellow: #ffee00;
+  --accent-purple: #9d00ff;
+  
+  --win-face: #c0c0c0;
+  --win-light: #ffffff;
+  --win-shadow: #808080;
+  --win-dark: #000000;
+  --win-title-from: #000080;
+  --win-title-to: #1084d0;
+}
+
+/* GAL / HEISEI POP THEME VARIANT */
+body.theme-gal {
+  --bg-primary: #1e0524;
+  --text-main: #fff0f7;
+  --accent-cyan: #ff69b4;
+  --accent-pink: #ff007f;
+  --accent-yellow: #ffdf00;
+  --win-face: #fde8f2;
+  --win-title-from: #d81b60;
+  --win-title-to: #ff80ab;
+}
+
+/* --------------------------------------------------------------------------
+   Global Layout & Animated Cyber Background
+   -------------------------------------------------------------------------- */
+body {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(26, 35, 126, 0.5) 0%, transparent 70%),
+    radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.15) 0%, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  cursor: default;
+}
+
+/* 3D Wireframe Cyber Grid Plane */
+.cyber-grid {
+  position: fixed;
+  bottom: 0;
+  left: -50%;
+  width: 200%;
+  height: 60%;
+  background-image: 
+    linear-gradient(to right, rgba(0, 240, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.18) 1px, transparent 1px);
+  background-size: 50px 50px;
+  transform: perspective(300px) rotateX(65deg);
+  transform-origin: 50% 100%;
+  animation: gridMove 20s linear infinite;
+  mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 1000px; }
+}
+
+/* Twinkling Starfield */
+.stars-container {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    radial-gradient(1px 1px at 25px 35px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 150px 80px, #00f0ff, transparent),
+    radial-gradient(2px 2px at 220px 240px, #ff69b4, transparent),
+    radial-gradient(1px 1px at 340px 120px, #ffffff, transparent),
+    radial-gradient(1.5px 1.5px at 450px 300px, #ffee00, transparent);
+  background-repeat: repeat;
+  background-size: 500px 500px;
+  opacity: 0.7;
+  animation: starsTwinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes starsTwinkle {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.85; }
+}
+
+/* --------------------------------------------------------------------------
+   CRT / Scanline Effect Overlay (Toggled via CRT Button)
+   -------------------------------------------------------------------------- */
+.crt-overlay {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.35) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.04),
+    rgba(0, 255, 0, 0.02),
+    rgba(0, 0, 255, 0.04)
+  );
+  background-size: 100% 3px, 6px 100%;
+  opacity: 1;
+}
+
+.crt-overlay.crt-off {
+  opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Chrome Text Effect & Hologram Aesthetics
+   -------------------------------------------------------------------------- */
+.chrome-text {
+  background: linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    #d1d5db 30%,
+    #4b5563 50%,
+    #9ca3af 52%,
+    #ffffff 70%,
+    #1f2937 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0, 240, 255, 0.6))
+          drop-shadow(0 0 10px rgba(255, 20, 147, 0.4));
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+/* Hologram CD-ROM Disk */
+.cd-disk {
+  background: radial-gradient(
+    circle at center,
+    #111 0%,
+    #333 25%,
+    #888 35%,
+    #ddd 45%,
+    #ff69b4 55%,
+    #00f0ff 65%,
+    #ffee00 75%,
+    #39ff14 85%,
+    #111 100%
+  );
+  box-shadow: 
+    0 0 25px rgba(0, 240, 255, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.8);
+  animation: spinCd 16s linear infinite;
+  transition: transform 0.3s ease;
+}
+
+.cd-disk:hover {
+  animation-duration: 4s;
+  box-shadow: 
+    0 0 35px rgba(255, 20, 147, 0.8),
+    inset 0 0 20px rgba(255, 255, 255, 0.95);
+}
+
+@keyframes spinCd {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinCd 25s linear infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Windows 98 / 2000 / XP Styled UI Components
+   -------------------------------------------------------------------------- */
+.y2k-window {
+  box-shadow: 
+    inset 1px 1px 0px #ffffff,
+    inset -1px -1px 0px #707070,
+    inset 2px 2px 0px #dfdfdf,
+    inset -2px -2px 0px #000000,
+    0 15px 35px rgba(0, 0, 0, 0.6);
+}
+
+.win-control-btn {
+  width: 18px;
+  height: 16px;
+  line-height: 12px;
+  font-size: 11px;
+  text-align: center;
+  background-color: #c0c0c0;
+  box-shadow: 
+    inset 1px 1px 0px #ffffff,
+    inset -1px -1px 0px #808080,
+    inset -2px -2px 0px #000000;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.win-control-btn:active {
+  box-shadow: 
+    inset 1px 1px 0px #000000,
+    inset -1px -1px 0px #ffffff;
+  padding-top: 1px;
+}
+
+/* Navigation Tab Buttons */
+.y2k-tab-btn {
+  background: linear-gradient(180deg, #f0f4f8 0%, #cbd5e1 100%);
+  border: 2px solid #ffffff;
+  border-right-color: #64748b;
+  border-bottom-color: #475569;
+  color: #1e293b;
+  padding: 6px 14px;
+  font-family: 'Silkscreen', 'DotGothic16', monospace;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 6px 6px 0 0;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.y2k-tab-btn:hover {
+  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+  color: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.y2k-tab-btn.active {
+  background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+  color: #ffffff;
+  border-bottom-color: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.8);
+}
+
+/* Y2K Mini Action Buttons */
+.y2k-btn-mini {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: 'DotGothic16', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.y2k-btn-mini:hover {
+  background: var(--accent-cyan);
+  color: #000;
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.y2k-btn-primary {
+  background: linear-gradient(180deg, #ff69b4 0%, #c2185b 100%);
+  border: 2px solid #ffffff;
+  border-right-color: #880e4f;
+  border-bottom-color: #880e4f;
+  color: #ffffff;
+  padding: 8px 18px;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(255, 20, 147, 0.4);
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.y2k-btn-primary:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px rgba(255, 20, 147, 0.8);
+}
+
+.y2k-btn-primary:active {
+  transform: translateY(1px);
+  border-color: #880e4f;
+  border-right-color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+.y2k-btn-secondary {
+  background: linear-gradient(180deg, #00f0ff 0%, #0284c7 100%);
+  border: 2px solid #ffffff;
+  border-right-color: #0369a1;
+  border-bottom-color: #0369a1;
+  color: #001020;
+  padding: 8px 18px;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 4px 10px rgba(0, 240, 255, 0.4);
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.y2k-btn-secondary:hover {
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.8);
+}
+
+/* --------------------------------------------------------------------------
+   Retro Badges & Stickers
+   -------------------------------------------------------------------------- */
+.retro-badge {
+  font-family: 'Silkscreen', monospace;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+  box-shadow: 1px 1px 0px rgba(0,0,0,0.8);
+  letter-spacing: 0.5px;
+}
+
+.y2k-tag {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: #a5f3fc;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-family: 'DotGothic16', sans-serif;
+}
+
+.tech-pill {
+  background-color: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'DotGothic16', monospace;
+  font-weight: bold;
+}
+
+/* --------------------------------------------------------------------------
+   Winamp Player Styles
+   -------------------------------------------------------------------------- */
+.winamp-player {
+  box-shadow: 
+    inset 1px 1px 0px #34d399,
+    inset -1px -1px 0px #064e3b,
+    0 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+.winamp-btn {
+  background: #1e293b;
+  border: 1px solid #34d399;
+  color: #6ee7b7;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-family: 'Silkscreen', monospace;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.winamp-btn:hover {
+  background: #34d399;
+  color: #022c22;
+}
+
+.winamp-btn:active {
+  transform: translateY(1px);
+}
+
+.visualizer-bar {
+  flex: 1;
+  background: linear-gradient(to top, #059669, #34d399, #facc15, #ef4444);
+  border-radius: 1px 1px 0 0;
+  transition: height 0.08s ease;
+}
+
+/* --------------------------------------------------------------------------
+   前略プロフィール (Zenryaku Profile) Cards
+   -------------------------------------------------------------------------- */
+.zenryaku-card {
+  background: #ffffff;
+  border: 1px solid #f9a8d4;
+  border-left: 4px solid #ec4899;
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease;
+}
+
+.zenryaku-card:hover {
+  transform: translateX(3px);
+  border-color: #db2777;
+}
+
+.zenryaku-q {
+  font-size: 11px;
+  color: #be185d;
+  font-weight: bold;
+}
+
+.zenryaku-a {
+  font-size: 13px;
+  color: #1e293b;
+  margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   Windows XP Progress Bar
+   -------------------------------------------------------------------------- */
+.xp-progress-bar {
+  width: 100%;
+  height: 14px;
+  background-color: #0f172a;
+  border: 1px solid #38bdf8;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.8);
+  padding: 1px;
+}
+
+.xp-progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #0284c7 0%,
+    #38bdf8 50%,
+    #7dd3fc 75%,
+    #0284c7 100%
+  );
+  background-size: 30px 100%;
+  animation: xpStripe 1.5s linear infinite;
+  border-radius: 1px;
+}
+
+@keyframes xpStripe {
+  0% { background-position: 0 0; }
+  100% { background-position: 30px 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Work Item Cards
+   -------------------------------------------------------------------------- */
+.work-card {
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 3px 3px 0px #94a3b8;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.work-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 6px 6px 0px #f43f5e;
+  border-color: #f43f5e;
+}
+
+.y2k-link-btn {
+  color: #0284c7;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: color 0.15s ease;
+}
+
+.y2k-link-btn:hover {
+  color: #ec4899;
+  text-decoration: underline;
+}
+
+/* Filter Buttons */
+.filter-btn {
+  padding: 3px 10px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  color: #475569;
+}
+
+.filter-btn:hover {
+  color: #0f172a;
+  background: #cbd5e1;
+}
+
+.filter-btn.active {
+  background: #ec4899;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* --------------------------------------------------------------------------
+   BBS Form & Thread Styles
+   -------------------------------------------------------------------------- */
+.y2k-input {
+  border: 2px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-family: 'DotGothic16', monospace;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.y2k-input:focus {
+  border-color: #06b6d4;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(6, 182, 212, 0.4);
+}
+
+.bbs-post-card {
+  background: #ffffff;
+  border: 1px solid #bae6fd;
+  border-left: 5px solid #0284c7;
+  padding: 10px 14px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* --------------------------------------------------------------------------
+   88x31 平成バナー (Web 1.0 Heritage)
+   -------------------------------------------------------------------------- */
+.heisei-banner-8831 {
+  width: 88px;
+  height: 31px;
+  border: 1px solid #ffffff;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.retro-badge-8831 {
+  width: 88px;
+  height: 31px;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  box-shadow: 1px 1px 0px #000;
+  transition: transform 0.15s ease;
+}
+
+.retro-badge-8831:hover {
+  transform: scale(1.05);
+}
+
+/* --------------------------------------------------------------------------
+   7-Segment Style Access Counter
+   -------------------------------------------------------------------------- */
+.counter-digit {
+  background: linear-gradient(180deg, #111827 0%, #000000 100%);
+  color: #39ff14;
+  border: 2px solid #374151;
+  border-radius: 4px;
+  padding: 2px 7px;
+  box-shadow: 
+    inset 0 0 6px rgba(57, 255, 20, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 8px #39ff14;
+}
+
+/* --------------------------------------------------------------------------
+   Marquee Animation
+   -------------------------------------------------------------------------- */
+.marquee-container {
+  white-space: nowrap;
+}
+
+.marquee-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marqueeScroll 22s linear infinite;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+/* --------------------------------------------------------------------------
+   Mouse Trail Sparkle (JavaScript creates these span elements)
+   -------------------------------------------------------------------------- */
+.sparkle-particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 14px;
+  animation: sparkleFly 0.8s ease-out forwards;
+}
+
+@keyframes sparkleFly {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx, 15px), var(--ty, 15px)) scale(0.2) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   FF (Final Fantasy) Homage Blue Window & Command Menu
+   -------------------------------------------------------------------------- */
+.ff-window {
+  background: linear-gradient(135deg, #020961 0%, #00129c 45%, #053ca8 75%, #01136b 100%);
+  border: 4px solid #ffffff;
+  border-radius: 8px;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.7),
+    0 8px 25px rgba(0, 0, 0, 0.8),
+    0 0 0 2px #4b5563;
+}
+
+.ff-cmd-btn {
+  background: rgba(0, 10, 80, 0.7);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  color: #ffffff;
+  padding: 8px 12px;
+  font-family: 'DotGothic16', monospace;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.ff-cmd-btn:hover {
+  background: #ffffff;
+  color: #020961;
+  border-color: #facc15;
+  box-shadow: 0 0 12px #facc15;
+  transform: translateX(4px);
+}
+
+.ff-cmd-btn:active {
+  transform: translateX(2px) scale(0.98);
+}
+
+/* --------------------------------------------------------------------------
+   Lucky Star Homage: Choco Cornet Poll Buttons
+   -------------------------------------------------------------------------- */
+.choco-vote-btn {
+  background: #ffffff;
+  border: 2px dashed #f472b6;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 3px 6px rgba(244, 114, 182, 0.2);
+}
+
+.choco-vote-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: #ec4899;
+  background: #fdf2f8;
+  box-shadow: 0 6px 15px rgba(236, 72, 153, 0.3);
+}
+
+.choco-vote-btn:active {
+  transform: translateY(1px);
+}
+
